@@ -1,0 +1,12 @@
+
+namespace kamaCache kcache
+
+KICachePolicy cache_policy
+
+class KLruCache LruCache
+
+
+
+
+
+
