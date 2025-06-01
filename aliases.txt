@@ -5,7 +5,7 @@ KICachePolicy cache_policy
 
 class KLruCache LruCache
 
-class KLruKCache KLruCache
+class KLruKCache LruKCache
 
 
 

@@ -144,27 +144,69 @@ private:
   int capacity_;
   NodeMap nodeMap_;
   std::mutex mutex_;
-  NodePtr dummyHead_; // 虚拟头节点
+  // 虚拟头节点
+  NodePtr dummyHead_;
   NodePtr dummyTail_;
 };
 
 // Lru-K 优化版
 template<typename Key, typename Value>
-class KLruCache : public LruCache<Key, Value> {
+class LruKCache : public LruCache<Key, Value> {
 
 public:
-  KLruCache(int capacity, int historyCapacity, int k)
+  LruKCache(int capacity, int historyCapacity, int k)
+  // 调用父类构造函数
     : LruCache<Key, Value>(capacity),
       historyList_(std::make_unique<LruCache<Key, size_t>>(historyCapacity)),
       k_(k)
   {}
 
+  // 重定义
   Value get(Key key) {
     Value value{};
     bool inMainCache = LruCache<Key, Value>::get(key, value);
     size_t historyCount = historyList_->get(key);
-    historyCount++;
+    historyCount ++;
     historyList_->put(key, historyCount);
+
+    if (inMainCache) {
+      return value;
+    }
+
+    if (historyCount >= k_) {
+      auto it = historyValueMap_.find(key);
+      if (it != historyValueMap_.end()) {
+        Value storedValue = it->second;
+        historyList_->remove(key);
+        historyValueMap_.erase(it);
+
+        LruCache<Key, Value>::put(key, storedValue);
+        return storedValue;
+      }
+    }
+    return value;
+  }
+
+  void put(Key key, Value value) {
+    Value existingValue{};
+    bool inMainCache = LruCache<Key, Value>::get(key, existingValue);
+
+    if (inMainCache) {
+      LruCache<Key, Value>::put(key, value);
+      return;
+    }
+
+    size_t historyCount = historyList_->get(key);
+    historyCount ++;
+    historyList_->put(key, historyCount);
+    historyValueMap_[key] = value;
+
+    if (historyCount >= k_) {
+      historyList_->remove(key);
+      historyValueMap_.erase(key);
+      LruCache<Key, Value>::put(key, value);
+    }
+    
   }
 
 
