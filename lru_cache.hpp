@@ -47,7 +47,7 @@ public:
   using NodeMap = std::unordered_map<Key, NodePtr>;
 
   LruCache(int capacity)
-    : capacity_(capacity) 
+    : capacity_(capacity)
   {
     initializeList();
   }
@@ -148,5 +148,31 @@ private:
   NodePtr dummyTail_;
 };
 
+// Lru-K 优化版
+template<typename Key, typename Value>
+class KLruCache : public LruCache<Key, Value> {
+
+public:
+  KLruCache(int capacity, int historyCapacity, int k)
+    : LruCache<Key, Value>(capacity),
+      historyList_(std::make_unique<LruCache<Key, size_t>>(historyCapacity)),
+      k_(k)
+  {}
+
+  Value get(Key key) {
+    Value value{};
+    bool inMainCache = LruCache<Key, Value>::get(key, value);
+    size_t historyCount = historyList_->get(key);
+    ++ historyCount;
+    historyList_->put(key, historyCount);
+  }
+
+
+private:
+  int K_;
+  std::unique_ptr<KLruCache<Key, Value>> historyList_;
+  std::unordered_map<Key, Value> historyValueMap_;
+
+};
 
 }
