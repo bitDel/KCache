@@ -163,14 +163,15 @@ public:
     Value value{};
     bool inMainCache = LruCache<Key, Value>::get(key, value);
     size_t historyCount = historyList_->get(key);
-    ++ historyCount;
+    historyCount++;
     historyList_->put(key, historyCount);
   }
 
 
 private:
+  // K 是进入缓存队列的评判标准
   int K_;
-  std::unique_ptr<KLruCache<Key, Value>> historyList_;
+  std::unique_ptr<LruCache<Key, size_t>> historyList_;
   std::unordered_map<Key, Value> historyValueMap_;
 
 };
