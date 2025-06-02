@@ -218,4 +218,48 @@ private:
 
 };
 
+// lru优化，对lru进行分片，降低锁的颗粒度，提高高并发性能
+template<typename Key, typename Value>
+class HashLruCache {
+
+public:
+  HashLruCache(size_t capacity, int sliceNum)
+    : capacity_(capacity),
+      sliceNum_(sliceNum > 0 ? sliceNum : std::thread::hardware_concurrency())
+  {
+    size_t sliceSize = std::ceil(capacity / static_cast<double>(sliceNum_));
+    for (int i = 0; i < sliceNum_; ++ i) {
+      lruSliceCache_.empalce_back(new LruCache<Key, Value>(sliceSize));
+    }
+  }
+
+  void put(Key key, Value value) {
+    size_t sliceIndex = Hash(key) % sliceNum_;
+    lruSliceCaches_[sliceIndex]->put(key, value);
+  }
+
+  bool get(Key key, Value &value) {
+    size_t sliceIndex = Hash(key) % sliceNum_;
+    return lruSliceCaches_[sliceIndex]->get(key, value);
+  }
+
+  Value get(Key key) {
+    Value value{};
+    // memset(&value, 0, sizeof(value));
+    get(key, value);
+    return value;
+  }
+
+private:
+  size_t Hash(Key key) {
+    std::hash<Key> hashFunc;
+    return hashFunc(key);
+  }
+
+private:
+  size_t capacity_;
+  int sliceNum_;
+  std::vector<std::unique_ptr<LruCache<Key, Value>>> lruSliceCaches_;
+};
+
 }
