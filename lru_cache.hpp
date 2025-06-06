@@ -79,7 +79,8 @@ public:
   }
 
   Value get(Key key) override {
-    Value value{}; // 使用Value的默认构造函数
+    // 使用Value的默认构造函数
+    Value value{};
     get(key, value);
     return value;
   }

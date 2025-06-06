@@ -9,6 +9,10 @@ class KLruKCache LruKCache
 
 class KHashLruCache HashLruCache
 
+class KLfuCache LfuCache
+
+class KHashLfuCache HashLfuCache
+
 
 
 
