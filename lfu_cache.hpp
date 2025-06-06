@@ -262,6 +262,7 @@ private:
 };
 
 
+// 并没有牺牲更多的空间，只是将原有缓存进行切片
 template<typename Key, typename Value>
 class HashLfuCache {
 
