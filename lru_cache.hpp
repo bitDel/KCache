@@ -39,7 +39,7 @@ public:
 };
 
 template<typename Key, typename Value>
-class LruCache : public cache_policy<Key, Value> {
+class LruCache : public CachePolicy<Key, Value> {
 
 public:
   using LruNodeType = LruNode<Key, Value>;

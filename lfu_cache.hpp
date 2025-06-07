@@ -90,7 +90,7 @@ public:
 };
 
 template <typename Key, typename Value>
-class LfuCache : public cache_policy<Key, Value> {
+class LfuCache : public CachePolicy<Key, Value> {
 
 public:
   using Node = typename FreqList<Key, Value>::Node;

@@ -3,7 +3,7 @@
 namespace kcache {
     
 template <typename Key, typename Value>
-class cache_policy {
+class CachePolicy {
 
 public:
   virtual ~cache_policy() {};

@@ -13,8 +13,4 @@ class KLfuCache LfuCache
 
 class KHashLfuCache HashLfuCache
 
-
-
-
-
-
+class KArcCache ArcCache
