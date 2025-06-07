@@ -25,6 +25,52 @@ public:
     initializeLists();
   }
 
+  bool put (Key key, Value value) {
+    if (capacity_ <= 0) {
+      return false;
+    }
+    
+    std::lock_guard<std::mutex> lock(mutex_);
+    auto it = mainCache_.find(key);
+    if (it != mainCache_.end()) {
+      return updateExistingNode(it->second, value);
+    }
+    return addNewNode(key, value);
+  }
+
+  bool get(Key key, Value &value) {
+    std::lock_guard<std::mutex> lock(mutex_);
+    auto it = mainCache_.find(key);
+    if (it != mainCache_.end()) {
+      updateNodeFrequency(it->second);
+      value = it->second->getValue();
+      return true;
+    }
+    return fasle;
+  }
+
+  bool checkGhost(Key key) {
+    auto it = ghostCache_.find(key);
+    if (it != ghostCache_.end()) {
+      removeFromGhost(it->second);
+      ghostCache_.erase(it);
+      return true;
+    }
+    return false;
+  }
+
+  void increaseCapacity() { ++ capacity_; }
+
+  bool decreaseCapacity() {
+    if (capacity_ <= 0) {
+      return false;
+    }
+    if (mainCache_.size() == capacity_) {
+      evictLeastFrequent();
+    }
+    -- capacity_;
+    return true;
+  }
 
 private:
 
@@ -56,7 +102,6 @@ private:
     minFreq_ = 1;
     return true;
   }
-
 
   void updateNodeFrequency(NodePtr node) {
     size_t oldFreq = node->getAccessCount();
@@ -130,12 +175,6 @@ private:
       node->next_ = nullptr;
     }
   }
-
-
-
-
-
-
 
 private:
   size_t capacity_;
