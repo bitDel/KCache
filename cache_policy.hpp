@@ -6,7 +6,7 @@ template <typename Key, typename Value>
 class CachePolicy {
 
 public:
-  virtual ~cache_policy() {};
+  virtual ~CachePolicy() {};
   // 缓存接口
   virtual void put(Key key, Value value) = 0;
 
