@@ -30,10 +30,10 @@ public:
   size_t getAccessCount() const { return accessCount_; }
 
   void setValue(const Value &value) { value_ = value; }
-  void incrementAccessCount() {++ accessCount_; }
+  void incrementAccessCount() { ++ accessCount_; }
 
-  template<typename Key, typename Value> friend class ArcLruPart;
-  template<typename Key, typename Value> friend class ArcLfuPart;
+  template<typename K, typename V> friend class ArcLruPart;
+  template<typename K, typename V> friend class ArcLfuPart;
 };
 
 }

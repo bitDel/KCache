@@ -72,7 +72,7 @@ public:
   }
 
 private:
-  void initializeList() {
+  void initializeLists() {
     mainHead_ = std::make_shared<NodeType>();
     mainTail_ = std::make_shared<NodeType>();
     mainHead_->next_ = mainTail_;

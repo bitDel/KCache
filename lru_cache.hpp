@@ -97,7 +97,7 @@ public:
 
 private:
 
-  void initalizeList() {
+  void initializeList() {
     // dummyHead_ = std::make_shared<LruNodeType>(Key(), Value());
     // dummyTail_ = std::make_shared<LruNodeType>(Key(), Value());
     // 显示构造临时临时对象，使用默认构造函数
@@ -131,7 +131,7 @@ private:
   void insertNode(NodePtr node) {
     node->next_ = dummyTail_;
     node->prev_ = dummyTail_->prev_;
-    dumyyTail_->prev_.lock()->next_ = node;
+    dummyTail_->prev_.lock()->next_ = node;
     dummyTail_->prev_ = node;
   }
 
@@ -213,7 +213,7 @@ public:
 
 private:
   // K 是进入缓存队列的评判标准
-  int K_;
+  int k_;
   std::unique_ptr<LruCache<Key, size_t>> historyList_;
   std::unordered_map<Key, Value> historyValueMap_;
 
@@ -230,7 +230,7 @@ public:
   {
     size_t sliceSize = std::ceil(capacity / static_cast<double>(sliceNum_));
     for (int i = 0; i < sliceNum_; ++ i) {
-      lruSliceCache_.empalce_back(new LruCache<Key, Value>(sliceSize));
+      lruSliceCaches_.empalce_back(new LruCache<Key, Value>(sliceSize));
     }
   }
 

@@ -95,7 +95,7 @@ class LfuCache : public CachePolicy<Key, Value> {
 public:
   using Node = typename FreqList<Key, Value>::Node;
   using NodePtr = std::shared_ptr<Node>;
-  using NodeMap = std::unoerdered_map<Key, NodePtr>;
+  using NodeMap = std::unordered_map<Key, NodePtr>;
 
   LfuCache(int capacity, int maxAveragerNum = 1000000)
     : capacity_(capacity),
@@ -173,7 +173,7 @@ private:
     decreaseFreqNum(node->freq);
   }
 
-  removeFromFreqList(NodePtr node) {
+  void removeFromFreqList(NodePtr node) {
     if (!node) {
       return;
     }
@@ -273,7 +273,7 @@ public:
   {
     size_t sliceSize = std::ceil(capacity_ / static_cast<double>(sliceNum_));
     for (int i = 0; i < sliceNum_; ++ i) {
-      lfuSliceCaches_.emplace_back(new LfuCache<Key, Value>(sliceSize, maxAverageNum))
+      lfuSliceCaches_.emplace_back(new LfuCache<Key, Value>(sliceSize, maxAverageNum));
     }
   }
 

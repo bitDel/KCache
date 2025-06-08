@@ -12,7 +12,7 @@ class ArcLfuPart {
 
 public:
   using NodeType = ArcNode<Key, Value>;
-  using NodePtr = std::shared_ptr<NodePtr>;
+  using NodePtr = std::shared_ptr<NodeType>;
   using NodeMap = std::unordered_map<Key, NodePtr>;
   using FreqMap = std::map<size_t, std::list<NodePtr>>;
 
@@ -46,7 +46,7 @@ public:
       value = it->second->getValue();
       return true;
     }
-    return fasle;
+    return false;
   }
 
   bool checkGhost(Key key) {
