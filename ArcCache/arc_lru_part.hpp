@@ -79,7 +79,7 @@ private:
     mainTail_->prev_ = mainHead_;
     
     ghostHead_ = std::make_shared<NodeType>();
-    ghostHead_ = std::make_shared<NodeType>();
+    ghostTail_ = std::make_shared<NodeType>();
     ghostHead_->next_ = ghostTail_;
     ghostTail_->prev_ = ghostHead_;
   }
