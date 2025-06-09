@@ -20,7 +20,7 @@ public:
 
   ~ArcCache() override = default;
 
-  void put(Key key, Value value) {
+  void put(Key key, Value value) override {
     bool inGhost = checkGhostCache(key);
 
     if (!inGhost) {

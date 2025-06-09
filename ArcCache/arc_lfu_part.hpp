@@ -2,6 +2,7 @@
 
 #include "arc_cache_node.hpp"
 #include <unordered_map>
+#include <list>
 #include <map>
 #include <mutex>
 
@@ -83,7 +84,7 @@ private:
 
   bool updateExistingNode(NodePtr node, const Value &value) {
     node->setValue(value);
-    updateExistingNode(node);
+    updateNodeFrequency(node);
     return true;
   }
 

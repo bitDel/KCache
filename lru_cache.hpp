@@ -1,10 +1,13 @@
 #pragma once
 
+#include <cmath>
 #include <cstring>
 #include <list>
-#include <memory>
-#include <mutex>
+#include <vector>
 #include <unordered_map>
+#include <memory>
+#include <thread>
+#include <mutex>
 
 #include "cache_policy.hpp"
 
@@ -126,6 +129,16 @@ private:
       node->next_ = nullptr;
       // 清空指针，断开连接
     }
+  }
+
+  void addNewNode(const Key &key, const Value &value) {
+    if (nodeMap_.size() >= capacity_) {
+      evictLeastRecent();
+    }
+
+    NodePtr newNode = std::make_shared<LruNodeType>(key, value);
+    insertNode(newNode);
+    nodeMap_[key] = newNode;
   }
 
   void insertNode(NodePtr node) {

@@ -118,7 +118,7 @@ public:
       getInternal(it->second, value);
       return;
     }
-    putInteranl(key, value);
+    putInternal(key, value);
   }
 
   bool get(Key key, Value &value) override {
@@ -145,7 +145,7 @@ public:
 
 private:
   void putInternal(Key key, Value value) {
-    if (nodeMap_.size() == capacity_()) {
+    if (nodeMap_.size() == capacity_) {
       kickOut();
     }
     NodePtr node = std::make_shared<Node>(key, value);
@@ -157,7 +157,7 @@ private:
 
   void getInternal(NodePtr node, Value &value) {
     value = node->value;
-    removeFromqList(node);
+    removeFromFreqList(node);
     node->freq++;
     addToFreqList(node);
     if (node->freq - 1 == minFreq_ && freqToFreqList_[node->freq - 1]->isEmpty()) {

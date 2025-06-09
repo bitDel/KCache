@@ -10,7 +10,7 @@ template<typename Key, typename Value>
 class ArcLruPart {
 
 public:
-  using NodeType = ArcNode;
+  using NodeType = ArcNode<Key, Value>;
   using NodePtr = std::shared_ptr<NodeType>;
   using NodeMap = std::unordered_map<Key, NodePtr>;
 
@@ -89,7 +89,7 @@ private:
       evictLeastRecent();
     }
 
-    NodePtr newNode = std::make_shared<NodePtr>(key, value);
+    NodePtr newNode = std::make_shared<NodeType>(key, value);
     mainCache_[key] = newNode;
     addToFront(newNode);
     return true;
@@ -135,7 +135,7 @@ private:
   }
 
   void removeOldestGhost() {
-    NodePtr oldestGhost = ghostTail_->prev_->prev_.lock();
+    NodePtr oldestGhost = ghostTail_->prev_.lock();
     if (!oldestGhost || oldestGhost == ghostHead_) {
       return;
     }
